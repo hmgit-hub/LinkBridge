@@ -1,0 +1,42 @@
+services:
+  linkbridge:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    image: linkbridge:latest
+    container_name: linkbridge
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - NAS_SYSTEM=${NAS_SYSTEM:-generic}
+      - ALLOWED_ROOTS=${ALLOWED_ROOTS:-/}
+      - HOST=${HOST:-0.0.0.0}
+      - PORT=${PORT:-8000}
+    volumes:
+      # 群晖路径
+      - /volume1:/volume1:ro
+      - /volume2:/volume2:ro
+      - /volume3:/volume3:ro
+      # 威联通路径
+      - /share:/share:ro
+      - /share/CACHEDEV1_DATA:/share/CACHEDEV1_DATA:ro
+      # 飞牛路径
+      - /data:/data:ro
+      - /mnt/data:/mnt/data:ro
+      # 极空间路径
+      - /mnt/HD1/HD1_a2:/mnt/HD1/HD1_a2:ro
+      - /mnt/MD0/MD0_Data1:/mnt/MD0/MD0_Data1:ro
+      # 插件目录 (读写)
+      - ./plugins:/app/plugins:rw
+
+    networks:
+      - linkbridge
+
+networks:
+  linkbridge:
+    driver: bridge

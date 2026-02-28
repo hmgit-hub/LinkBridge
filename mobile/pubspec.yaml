@@ -1,0 +1,65 @@
+name: linkbridge
+description: LinkBridge mobile app for managing symlinks
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.8
+  flutter_svg: ^2.0.10+1
+  shimmer: ^3.0.0
+
+  # 状态管理
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # 网络
+  dio: ^5.7.0
+  pretty_dio_logger: ^1.4.0
+  connectivity_plus: ^6.0.5
+
+  # 本地存储
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.4
+  shared_preferences: ^2.3.2
+
+  # 二维码扫描
+  mobile_scanner: ^5.2.3
+
+  # 通知
+  flutter_local_notifications: ^17.2.3
+
+  # 生物识别
+  local_auth: ^2.3.0
+
+  # 文件选择
+  file_picker: ^8.1.2
+
+  # 工具
+  intl: ^0.19.0
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # 代码生成
+  build_runner: ^2.4.12
+  riverpod_generator: ^2.4.2
+  riverpod_lint: ^2.3.10
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/

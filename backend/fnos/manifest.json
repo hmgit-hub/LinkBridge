@@ -1,0 +1,81 @@
+{
+  "id": "linkbridge",
+  "name": "LinkBridge",
+  "version": "1.0.0",
+  "description": "LinkBridge - 跨 NAS 软链接管理工具",
+  "author": "LinkBridge Team",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/linkbridge",
+  "repository": "https://github.com/yourusername/linkbridge",
+  "icon": "icon.png",
+  "category": "tools",
+  "tags": ["docker", "symlink", "nas"],
+  "architecture": ["amd64", "arm64"],
+  "os": ["linux"],
+  "min_os_version": "1.0.0",
+  "docker": {
+    "image": "linkbridge/linkbridge:latest",
+    "ports": [
+      {
+        "container": 8000,
+        "host": 8000,
+        "protocol": "tcp",
+        "description": "Web UI"
+      }
+    ],
+    "volumes": [
+      {
+        "container": "/data",
+        "host": "/data",
+        "mode": "ro",
+        "description": "Data directory"
+      },
+      {
+        "container": "/mnt/data",
+        "host": "/mnt/data",
+        "mode": "ro",
+        "description": "Mount data directory"
+      },
+      {
+        "container": "/var/run/docker.sock",
+        "host": "/var/run/docker.sock",
+        "mode": "rw",
+        "description": "Docker socket"
+      }
+    ],
+    "environment": [
+      {
+        "key": "NAS_SYSTEM",
+        "value": "fnos",
+        "description": "NAS system type"
+      },
+      {
+        "key": "ALLOWED_ROOTS",
+        "value": "/data,/mnt/data",
+        "description": "Allowed root directories"
+      },
+      {
+        "key": "HOST",
+        "value": "0.0.0.0",
+        "description": "Host address"
+      },
+      {
+        "key": "PORT",
+        "value": "8000",
+        "description": "Port"
+      }
+    ],
+    "network": "bridge",
+    "restart_policy": "unless-stopped",
+    "privileged": false
+  },
+  "web": {
+    "url": "http://{{IP}}:8000",
+    "open_in_new_tab": true
+  },
+  "requirements": {
+    "docker": true,
+    "memory": 128,
+    "disk": 100
+  }
+}

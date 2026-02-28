@@ -1,0 +1,87 @@
+#!/bin/sh
+
+PACKAGE="linkbridge"
+DOCKERIMAGE="linkbridge/linkbridge:latest"
+DOCKER_CONTAINER="linkbridge"
+SYNOSVC="/usr/syno/sbin/synosharemap"
+
+start_dockerd ()
+{
+    # Check if the Docker daemon is running; if not, start it.
+    if [ -z "$(${SYNOSVC} --get | grep DockerService | xargs)" ]; then
+        ${SYNOSVC} --start DockerService
+    fi
+}
+
+wait_dockerd ()
+{
+    # Wait for the Docker daemon to be up and running.
+    timeout=60
+    while [ -z "$(${SYNOSVC} --get | grep DockerService | xargs)" -a ${timeout} -gt 0 ]; do
+        timeout=$((timeout-1))
+        sleep 1
+    done
+
+    if [ -z "$(${SYNOSVC} --get | grep DockerService | xargs)" ]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
+case "$1" in
+    start)
+        start_dockerd
+        wait_dockerd
+
+        # Remove old container
+        docker rm -f "${DOCKER_CONTAINER}" >/dev/null 2>&1
+
+        # Start new container
+        docker run -d \
+            --name "${DOCKER_CONTAINER}" \
+            --restart always \
+            --network=bridge \
+            --privileged \
+            -p ${wizard_port_number:-8000}:8000 \
+            --env-file /var/packages/${PACKAGE}/target/app/config/.env \
+            -v /volume1:/volume1:ro \
+            -v /volume2:/volume2:ro \
+            -v /volume3:/volume3:ro \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            ${DOCKERIMAGE}
+
+        exit 0
+        ;;
+    stop)
+        # Stop container
+        docker stop "${DOCKER_CONTAINER}" >/dev/null 2>&1
+
+        # Remove container
+        docker rm -f "${DOCKER_CONTAINER}" >/dev/null 2>&1
+
+        exit 0
+        ;;
+    status)
+        if docker ps | grep "${DOCKER_IMAGE}" >/dev/null 2>&1; then
+            exit 0
+        else
+            exit 1
+        fi
+        ;;
+    log)
+        if [ -n "${SYNOPKG_DSM_VERSION_MAJOR}" ] && [ "${SYNOPKG_DSM_VERSION_MAJOR}" -lt 7 ]; then
+            exit 0
+        fi
+        result=$(docker inspect -f '{{.State.Status}}' "${DOCKER_CONTAINER}" 2>&1)
+        if [ $? -eq 0 ]; then
+            echo "$result"
+            exit 0
+        else
+            exit 1
+        fi
+        ;;
+    *)
+        exit 1
+        ;;
+esac

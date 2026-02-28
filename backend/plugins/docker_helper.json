@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "schedule_interval": 300,
+  "docker_socket": "/var/run/docker.sock"
+}

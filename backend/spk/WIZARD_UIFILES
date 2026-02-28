@@ -1,0 +1,50 @@
+{
+  "step1": {
+    "title": "配置",
+    "items": [
+      {
+        "type": "multiselect",
+        "desc": "选择要挂载的卷",
+        "subitems": [
+          {
+            "key": "wizard_volume_1_v1",
+            "desc": "Volume 1",
+            "defaultValue": true
+          },
+          {
+            "key": "wizard_volume_1_v2",
+            "desc": "Volume 2",
+            "defaultValue": false
+          },
+          {
+            "key": "wizard_volume_1_v3",
+            "desc": "Volume 3",
+            "defaultValue": false
+          }
+        ]
+      },
+      {
+        "type": "textfield",
+        "desc": "端口号",
+        "subitems": [
+          {
+            "key": "wizard_port_number",
+            "desc": "默认端口：8000",
+            "defaultValue": "8000"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "desc": "启用 Docker",
+        "subitems": [
+          {
+            "key": "wizard_enable_docker",
+            "desc": "启用 Docker",
+            "defaultValue": true
+          }
+        ]
+      }
+    ]
+  }
+}

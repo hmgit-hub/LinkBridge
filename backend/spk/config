@@ -1,0 +1,24 @@
+#!/bin/sh
+
+CONFIG="/var/packages/${SYNOPKG_PKGNAME}/target/app/config"
+TMP_DIR="${SYNOPKG_PKGDEST}/tmp"
+
+mkdir -p ${CONFIG}
+mkdir -p ${TMP_DIR}
+
+volume_v1=$([ "${wizard_volume_1_v1}" == "true" ] && echo "/volume1" || echo "")
+volume_v2=$([ "${wizard_volume_1_v2}" == "true" ] && echo "/volume2" || echo "")
+volume_v3=$([ "${wizard_volume_1_v3}" == "true" ] && echo "/volume3" || echo "")
+
+volumes=(${volume_v1} ${volume_v2} ${volume_v3})
+volumes_str=$(IFS=','; echo "${volumes[*]}")
+volumes_str=${volumes_str%,}
+
+cat > ${CONFIG}/.env <<EOF
+NAS_SYSTEM=synology
+ALLOWED_ROOTS=${volumes_str}
+HOST=0.0.0.0
+PORT=${wizard_port_number}
+EOF
+
+exit 0
